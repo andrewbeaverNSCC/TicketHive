@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TicketHive.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<TicketHiveContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TicketHiveContext") ?? throw new InvalidOperationException("Connection string 'TicketHiveContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

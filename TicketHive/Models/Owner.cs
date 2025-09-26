@@ -7,5 +7,8 @@
 
         public string OwnerName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+
+        //Navigation property
+        public List<Concert>? Concert { get; set; }
     }
 }
