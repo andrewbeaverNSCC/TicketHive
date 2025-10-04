@@ -1,3 +1,5 @@
+
+
 html {
   font-size: 14px;
 }
@@ -28,4 +30,46 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+body {
+    background-color: #FCF52D; /* Soft yellow tint */
+}
+
+.container {
+    background-color: #fffbe6; /* Lighter yellow tint for contrast */
+/*    border-radius: 8px;*/
+/*    padding: 24px;*/
+}
+
+h1 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, Helvetica, sans-serif;
+    font-weight: 700;
+}
+
+footer .container {
+    background: transparent !important;
+}
+
+.navbar-brand {
+    font-family: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 1px;
+}
+
+.navbar-nav {
+    font-family: 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+    font-weight: 500;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+}
+
+.thumbnail {
+    max-width:70px; 
+    max-height: 70px;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Keeps aspect ratio, fits within box */
+    border-radius: 8px; /* rounded corners */
 }

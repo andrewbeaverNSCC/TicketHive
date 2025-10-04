@@ -59,13 +59,14 @@ namespace TicketHive.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ConcertId,Title,Description,Location,ConcertTime,PublishDate,OwnerId,CategoryId")] Concert concert)
+        public async Task<IActionResult> Create([Bind("ConcertId,Title,Description,Location,ConcertTime,PublishDate,OwnerId,CategoryId,Filename")] Concert concert)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(concert);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction();
+                return RedirectToAction("Index", "Home");
             }
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", concert.CategoryId);
             ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerId", concert.OwnerId);
@@ -95,7 +96,7 @@ namespace TicketHive.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ConcertId,Title,Description,Location,ConcertTime,PublishDate,OwnerId,CategoryId")] Concert concert)
+        public async Task<IActionResult> Edit(int id, [Bind("ConcertId,Title,Description,Location,ConcertTime,PublishDate,OwnerId,CategoryId,Filename")] Concert concert)
         {
             if (id != concert.ConcertId)
             {
@@ -120,7 +121,7 @@ namespace TicketHive.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", concert.CategoryId);
             ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerId", concert.OwnerId);
@@ -159,7 +160,7 @@ namespace TicketHive.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home"); ;
         }
 
         private bool ConcertExists(int id)
