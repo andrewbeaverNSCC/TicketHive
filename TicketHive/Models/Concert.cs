@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TicketHive.Models
 {
@@ -29,6 +30,11 @@ namespace TicketHive.Models
         //Navigation property
         public Owner? Owner { get; set; } 
         public Category? Category { get; set; }
+
+        // Image file
+        [NotMapped]
+        [Display(Name = "Concert")]
+        public IFormFile? FormFile { get; set; } //nullable
 
     }
 }

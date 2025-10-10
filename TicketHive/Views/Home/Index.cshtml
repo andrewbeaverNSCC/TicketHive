@@ -30,12 +30,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.PublishDate)
             </th> 
-            @* <th>
-                @Html.DisplayNameFor(model => model.Owner)
-            </th> *@
-            @* <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th> *@
             <th></th>
         </tr>
     </thead>
@@ -43,9 +37,12 @@
 @foreach (var item in Model) {
         <tr>
 
-            <td>
-                <img src="/images/@item.Filename" alt="@item.Title" class="thumbnail" />
-            </td>
+                @* <th>
+                    <img src="/concert-photos/@item.Filename" alt="@item.Title" class="thumbnail" />
+                </th> *@
+                <th>
+                    <img src="/concert-photos/@(string.IsNullOrEmpty(item.Filename) ? "placeholder.jpg" : item.Filename)" alt="@item.Title" class="thumbnail" />
+                </th>
             <td>
                 @Html.DisplayFor(model => item.Title)
             </td>
@@ -64,12 +61,7 @@
                 @* @Html.DisplayFor(modelItem => item.PublishDate) *@
                 @item.PublishDate.ToString("MMM dd, yyyy")
             </td>
-            @* <td>
-                @Html.DisplayFor(modelItem => item.Owner.OwnerId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryId)
-            </td> *@
+            
             <td>
                 <a asp-controller="Concerts" asp-action="Edit" asp-route-id="@item.ConcertId">Edit</a> |
                 <a asp-controller="Home" asp-action="Details" asp-route-id="@item.ConcertId">Details</a> |

@@ -4,7 +4,12 @@ namespace TicketHive.Models
 {
     public class Category
     {
+
+        //Drop down
+
         //Primary key
+        [Display(Name = "Category Id")]
+
         public int CategoryId { get; set; }
 
         [Display(Name = "Category Name")]

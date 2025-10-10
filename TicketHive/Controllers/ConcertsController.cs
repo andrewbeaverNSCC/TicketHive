@@ -49,8 +49,8 @@ namespace TicketHive.Controllers
         // GET: Concerts/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId");
-            ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerId");
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryName");
+            ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerName");
             return View();
         }
 
@@ -59,35 +59,60 @@ namespace TicketHive.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ConcertId,Title,Description,Location,ConcertTime,PublishDate,OwnerId,CategoryId,Filename")] Concert concert)
+        public async Task<IActionResult> Create([Bind("ConcertId,Title,Description,Location,ConcertTime,OwnerId,CategoryId,Filename,FormFile")] Concert concert)
         {
+
+            // Set the publish date
+            concert.PublishDate = DateTime.Now;
+
             if (ModelState.IsValid)
             {
+
+                if (concert.FormFile != null)
+                {
+                    // Create a unique filename using a GUID
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(concert.FormFile.FileName);
+
+                    // Set the filename from upload file
+                    concert.Filename = filename;
+
+                    // Use Path.Combine to get the file path to save file to
+                    string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename); 
+
+                    // Save file
+                    using (var fileStream = new FileStream(saveFilePath, FileMode.Create))
+                    {
+                        await concert.FormFile.CopyToAsync(fileStream);
+                    }
+                }
+
                 _context.Add(concert);
                 await _context.SaveChangesAsync();
                 //return RedirectToAction();
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", concert.CategoryId);
-            ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerId", concert.OwnerId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryName", concert.CategoryId);
+            ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerName", concert.OwnerId);
             return View(concert);
         }
 
         // GET: Concerts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
             }
+
 
             var concert = await _context.Concert.FindAsync(id);
             if (concert == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", concert.CategoryId);
-            ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerId", concert.OwnerId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryName", concert.CategoryId);
+            ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerName", concert.OwnerId);
             return View(concert);
         }
 
@@ -96,8 +121,11 @@ namespace TicketHive.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ConcertId,Title,Description,Location,ConcertTime,PublishDate,OwnerId,CategoryId,Filename")] Concert concert)
+        public async Task<IActionResult> Edit(int id, [Bind("ConcertId,Title,Description,Location,ConcertTime,OwnerId,CategoryId,Filename,FormFile")] Concert concert)
         {
+            // Set the publish date
+            concert.PublishDate = DateTime.Now;
+
             if (id != concert.ConcertId)
             {
                 return NotFound();
@@ -105,6 +133,37 @@ namespace TicketHive.Controllers
 
             if (ModelState.IsValid)
             {
+                // Get the existing concert from the database
+                var existingConcert = await _context.Concert.AsNoTracking().FirstOrDefaultAsync(c => c.ConcertId == id);
+                if (existingConcert == null)
+                {
+                    return NotFound();
+                }
+
+                if (concert.FormFile != null)
+                {
+                    // Create a unique filename using a GUID
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(concert.FormFile.FileName); 
+
+                    // Set the filename from upload file
+                    concert.Filename = filename;
+
+                    // Use Path.Combine to get the file path to save file to
+                    string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename);
+
+                    // Save file
+                    using (var fileStream = new FileStream(saveFilePath, FileMode.Create))
+                    {
+                        await concert.FormFile.CopyToAsync(fileStream);
+                    }
+                }
+                else
+                {
+                    // Preserve the existing filename if no new file is uploaded
+                    concert.Filename = existingConcert.Filename;
+                }
+                
+
                 try
                 {
                     _context.Update(concert);
@@ -123,8 +182,8 @@ namespace TicketHive.Controllers
                 }
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", concert.CategoryId);
-            ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerId", concert.OwnerId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryName", concert.CategoryId);
+            ViewData["OwnerId"] = new SelectList(_context.Set<Owner>(), "OwnerId", "OwnerName", concert.OwnerId);
             return View(concert);
         }
 
@@ -156,6 +215,15 @@ namespace TicketHive.Controllers
             var concert = await _context.Concert.FindAsync(id);
             if (concert != null)
             {
+                // Delete the photo file if it exists
+                if (!string.IsNullOrEmpty(concert.Filename))
+                {
+                    var photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", concert.Filename);
+                    if (System.IO.File.Exists(photoPath))
+                    {
+                        System.IO.File.Delete(photoPath);
+                    }
+                }
                 _context.Concert.Remove(concert);
             }
 

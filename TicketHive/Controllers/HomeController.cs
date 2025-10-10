@@ -19,11 +19,7 @@ namespace TicketHive.Controllers
             _context = context;
         }
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-        // GET: concerts
+        
         public async Task<IActionResult> Index()
         {
             // Get all concerts

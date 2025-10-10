@@ -6,11 +6,10 @@
 
 <h1>Add New Concert</h1>
 
-@* <h4>Concert</h4> *@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 <label asp-for="Title" class="control-label"></label>
@@ -27,21 +26,22 @@
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
+            <!-- File input! -->
             <div class="mb-3">
-                <label asp-for="Filename" class="control-label"></label>
-                <input asp-for="Filename" class="form-control" />
-                <span asp-validation-for="Filename" class="text-danger"></span>
+                <label asp-for="FormFile" class="control-label"></label>
+                <input type="file" asp-for="FormFile" class="form-control" />
+                <span asp-validation-for="FormFile" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="ConcertTime" class="control-label"></label>
                 <input asp-for="ConcertTime" class="form-control" />
                 <span asp-validation-for="ConcertTime" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            @* <div class="mb-3">
                 <label asp-for="PublishDate" class="control-label"></label>
                 <input asp-for="PublishDate" class="form-control" />
                 <span asp-validation-for="PublishDate" class="text-danger"></span>
-            </div>
+            </div> *@
             <div class="mb-3">
                 <label asp-for="OwnerId" class="control-label"></label>
                 <select asp-for="OwnerId" class ="form-control" asp-items="ViewBag.OwnerId"></select>
