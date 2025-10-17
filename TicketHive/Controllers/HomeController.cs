@@ -1,13 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Diagnostics;
 using TicketHive.Data;
 using TicketHive.Models;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace TicketHive.Controllers
 {
+    // restricted access
+    [Authorize]
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
