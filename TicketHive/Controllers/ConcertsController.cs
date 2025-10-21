@@ -17,9 +17,14 @@ namespace TicketHive.Controllers
     {
         private readonly TicketHiveContext _context;
 
-        public ConcertsController(TicketHiveContext context)
+        //Added for file upload with server
+        private readonly IWebHostEnvironment _env;
+
+        public ConcertsController(TicketHiveContext context, IWebHostEnvironment env)
         {
             _context = context;
+
+            _env = env;
         }
 
         // GET: Concerts
@@ -80,7 +85,16 @@ namespace TicketHive.Controllers
                     concert.Filename = filename;
 
                     // Use Path.Combine to get the file path to save file to
-                    string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename); 
+                    // Was used before IWebHostEnvironment
+                    //string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename);
+
+                    // Use IWebHostEnvironment.WebRootPath and ensure folder exists
+                    var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                    var uploads = Path.Combine(webRoot, "concert-photos");
+                    Directory.CreateDirectory(uploads);
+
+                    // Use Path.Combine to get the file path to save file to
+                    string saveFilePath = Path.Combine(uploads, filename);
 
                     // Save file
                     using (var fileStream = new FileStream(saveFilePath, FileMode.Create))
@@ -151,8 +165,16 @@ namespace TicketHive.Controllers
                     // Set the filename from upload file
                     concert.Filename = filename;
 
+                    // Use IWebHostEnvironment.WebRootPath and ensure folder exists
+                    var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                    var uploads = Path.Combine(webRoot, "concert-photos");
+                    Directory.CreateDirectory(uploads);
+
                     // Use Path.Combine to get the file path to save file to
-                    string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename);
+                    //string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename);
+
+                    // Use Path.Combine to get the file path to save file to
+                    string saveFilePath = Path.Combine(uploads, filename);
 
                     // Save file
                     using (var fileStream = new FileStream(saveFilePath, FileMode.Create))
@@ -221,7 +243,13 @@ namespace TicketHive.Controllers
                 // Delete the photo file if it exists
                 if (!string.IsNullOrEmpty(concert.Filename))
                 {
-                    var photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", concert.Filename);
+                    // Use IWebHostEnvironment.WebRootPath
+                    var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                    var uploads = Path.Combine(webRoot, "concert-photos");
+                    var photoPath = Path.Combine(uploads, concert.Filename);
+
+                    // Used before IWebHostEnvironment
+                    //var photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", concert.Filename);
                     if (System.IO.File.Exists(photoPath))
                     {
                         System.IO.File.Delete(photoPath);
