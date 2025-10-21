@@ -30,7 +30,7 @@ namespace TicketHive.Controllers
         {
 
             // Validate username and password (username and password stored in secrets.json)
-            if (username == _configuration["username"] && password == _configuration["password"])
+            if (username == _configuration["tickethive_username"] && password == _configuration["tickethive_password"])
             {
                 // Create a list of claims identifying the user
                 var claims = new List<Claim>
