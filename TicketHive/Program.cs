@@ -41,10 +41,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Enable static files middleware to serve static files
-app.UseStaticFiles();
-
 app.UseRouting();
 
 // Add a user authentication
