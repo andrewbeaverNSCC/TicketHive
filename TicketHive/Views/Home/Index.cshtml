@@ -37,15 +37,15 @@
 @foreach (var item in Model) {
         <tr>
 
+                
                 @* <th>
-                    <img src="/concert-photos/@item.Filename" alt="@item.Title" class="thumbnail" />
-                </th> *@
-                <th>
                     <img src="@(string.IsNullOrEmpty(item.Filename) ? "placeholder.jpg" : item.Filename)" alt="@item.Title" class="thumbnail" />
-                </th>
-                @* <th>
-                    <img src="/concert-photos/@(string.IsNullOrEmpty(item.Filename) ? "placeholder.jpg" : item.Filename)" alt="@item.Title" class="thumbnail" />
                 </th> *@
+
+                <th>
+                    <img src="@(Url.Content(string.IsNullOrEmpty(item.Filename) ? "~/images/placeholder.jpg" : (item.Filename.StartsWith("/") || item.Filename.StartsWith("http", System.StringComparison.OrdinalIgnoreCase) ? item.Filename : "~/concert-photos/" + item.Filename)))" alt="@item.Title" class="thumbnail" />
+                </th>
+               
             <td>
                 @Html.DisplayFor(model => item.Title)
             </td>
