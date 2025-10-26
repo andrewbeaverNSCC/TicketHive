@@ -10,10 +10,12 @@
     @* <div class="w-50">
         <img src="/concert-photos/@Model.Filename" alt="@Model.Title" class="img-fluid" />
     </div> *@
-    <div class="w-50">
-        <img src="/concert-photos/@(string.IsNullOrEmpty(Model.Filename) ? "placeholder.jpg" : Model.Filename)" alt="@Model.Title" class="img-fluid" />
+    <div class="resizable-container" id="resizableBox">
+
+        <img src="@(string.IsNullOrEmpty(Model.Filename) ? "placeholder.jpg" : Model.Filename)" alt="@Model.Title" class="img-fluid" />
+        <div class="resize-handle"></div>
     </div>
-    <hr />
+    @* <hr /> *@
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)

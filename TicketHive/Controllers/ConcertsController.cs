@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +20,18 @@ namespace TicketHive.Controllers
     {
         private readonly TicketHiveContext _context;
 
-        public ConcertsController(TicketHiveContext context)
+        private readonly IConfiguration _configuration;
+        private readonly BlobContainerClient _containerClient;
+
+        public ConcertsController(TicketHiveContext context, IConfiguration configuration)
         {
             _context = context;
+
+            _configuration = configuration;
+
+            var connectionString = _configuration["AzureStorage"];
+            var containerName = "ticket-hive-uploads";
+            _containerClient = new BlobContainerClient(connectionString, containerName);
         }
 
         // GET: Concerts
@@ -73,20 +85,22 @@ namespace TicketHive.Controllers
 
                 if (concert.FormFile != null)
                 {
-                    // Create a unique filename using a GUID
-                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(concert.FormFile.FileName);
+                  
+                    // Upload to Azure Blob Storage
+                    var uploadFile = concert.FormFile;
 
-                    // Set the filename from upload file
-                    concert.Filename = filename;
+                    string blobName = Guid.NewGuid().ToString() + "_" + uploadFile.FileName;
 
-                    // Use Path.Combine to get the file path to save file to
-                    string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename); 
+                    var blobClient = _containerClient.GetBlobClient(blobName);
 
-                    // Save file
-                    using (var fileStream = new FileStream(saveFilePath, FileMode.Create))
+                    using (var stream = uploadFile.OpenReadStream())
                     {
-                        await concert.FormFile.CopyToAsync(fileStream);
+                        await blobClient.UploadAsync(stream, new BlobHttpHeaders { ContentType = uploadFile.ContentType });
                     }
+
+                    concert.Filename = blobClient.Uri.ToString();
+
+
                 }
 
                 _context.Add(concert);
@@ -145,20 +159,36 @@ namespace TicketHive.Controllers
 
                 if (concert.FormFile != null)
                 {
-                    // Create a unique filename using a GUID
-                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(concert.FormFile.FileName); 
+                    //// Create a unique filename using a GUID
+                    //string filename = Guid.NewGuid().ToString() + Path.GetExtension(concert.FormFile.FileName); 
 
-                    // Set the filename from upload file
-                    concert.Filename = filename;
+                    //// Set the filename from upload file
+                    //concert.Filename = filename;
 
-                    // Use Path.Combine to get the file path to save file to
-                    string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename);
+                    //// Use Path.Combine to get the file path to save file to
+                    //string saveFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", filename);
 
-                    // Save file
-                    using (var fileStream = new FileStream(saveFilePath, FileMode.Create))
+                    //// Save file
+                    //using (var fileStream = new FileStream(saveFilePath, FileMode.Create))
+                    //{
+                    //    await concert.FormFile.CopyToAsync(fileStream);
+                    //}
+
+                    var uploadFile = concert.FormFile;
+
+                    var originalFileName = Path.GetFileName(uploadFile.FileName);
+
+                    string blobName = Guid.NewGuid().ToString() + "_" + uploadFile.FileName;
+
+                    var blobClient = _containerClient.GetBlobClient(blobName);
+
+                    using (var stream = uploadFile.OpenReadStream())
                     {
-                        await concert.FormFile.CopyToAsync(fileStream);
+                        await blobClient.UploadAsync(stream, new BlobHttpHeaders { ContentType = uploadFile.ContentType });
                     }
+
+                    concert.Filename = blobClient.Uri.ToString();
+
                 }
                 else
                 {
@@ -221,11 +251,16 @@ namespace TicketHive.Controllers
                 // Delete the photo file if it exists
                 if (!string.IsNullOrEmpty(concert.Filename))
                 {
-                    var photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", concert.Filename);
-                    if (System.IO.File.Exists(photoPath))
-                    {
-                        System.IO.File.Delete(photoPath);
-                    }
+                    //var photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "concert-photos", concert.Filename);
+                    //if (System.IO.File.Exists(photoPath))
+                    //{
+                    //    System.IO.File.Delete(photoPath);
+                    //}
+
+                    // Delete from Azure Blob Storage
+                    var blobClient = _containerClient.GetBlobClient(concert.Filename);
+                    await blobClient.DeleteIfExistsAsync();
+
                 }
                 _context.Concert.Remove(concert);
             }

@@ -41,8 +41,11 @@
                     <img src="/concert-photos/@item.Filename" alt="@item.Title" class="thumbnail" />
                 </th> *@
                 <th>
-                    <img src="/concert-photos/@(string.IsNullOrEmpty(item.Filename) ? "placeholder.jpg" : item.Filename)" alt="@item.Title" class="thumbnail" />
+                    <img src="@(string.IsNullOrEmpty(item.Filename) ? "placeholder.jpg" : item.Filename)" alt="@item.Title" class="thumbnail" />
                 </th>
+                @* <th>
+                    <img src="/concert-photos/@(string.IsNullOrEmpty(item.Filename) ? "placeholder.jpg" : item.Filename)" alt="@item.Title" class="thumbnail" />
+                </th> *@
             <td>
                 @Html.DisplayFor(model => item.Title)
             </td>

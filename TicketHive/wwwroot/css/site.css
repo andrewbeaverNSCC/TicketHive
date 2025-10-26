@@ -73,3 +73,32 @@ footer .container {
     object-fit: contain; /* Keeps aspect ratio, fits within box */
     border-radius: 8px; /* rounded corners */
 }
+
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/resize */
+
+.resizable-container {
+    width: 400px; /* starting size */
+    border: 1px solid #ccc;
+    display: inline-block;
+    resize: both;
+    overflow: hidden;
+    position: relative;
+}
+
+    .resizable-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+.resize-handle {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.2);
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    pointer-events: none; /* so it doesn’t block dragging */
+}
