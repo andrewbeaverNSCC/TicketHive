@@ -43,7 +43,7 @@
                 </th> *@
 
                 <th>
-                    <img src="@(Url.Content(string.IsNullOrEmpty(item.Filename) ? "~/images/placeholder.jpg" : (item.Filename.StartsWith("/") || item.Filename.StartsWith("http", System.StringComparison.OrdinalIgnoreCase) ? item.Filename : "~/concert-photos/" + item.Filename)))" alt="@item.Title" class="thumbnail" />
+                    <img src="@(Url.Content(string.IsNullOrEmpty(item.Filename) ? "~/concert-photos/placeholder.jpg" : (item.Filename.StartsWith("/") || item.Filename.StartsWith("http", System.StringComparison.OrdinalIgnoreCase) ? item.Filename : "~/concert-photos/" + item.Filename)))" alt="@item.Title" class="thumbnail" />
                 </th>
                
             <td>
