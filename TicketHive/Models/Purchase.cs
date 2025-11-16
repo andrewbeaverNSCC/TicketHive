@@ -17,7 +17,7 @@ namespace TicketHive.Models
         public string NameOnCard { get; set; } = string.Empty;
 
         [Display(Name = "Card Number")]
-        public int CardNumber { get; set; }
+        public string CardNumber { get; set; } = string.Empty;
 
         [Display(Name = "Expiration Date")]
         public int ExpirationDate { get; set; }
