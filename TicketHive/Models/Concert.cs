@@ -31,6 +31,8 @@ namespace TicketHive.Models
         public Owner? Owner { get; set; } 
         public Category? Category { get; set; }
 
+        public List<Purchase>? Purchases { get; set; }
+
         // Image file
         [NotMapped]
         [Display(Name = "Concert")]

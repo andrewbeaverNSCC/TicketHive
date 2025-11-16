@@ -42,7 +42,8 @@
                     <img src="@(string.IsNullOrEmpty(item.Filename) ? "placeholder.jpg" : item.Filename)" alt="@item.Title" class="thumbnail" />
                 </th> *@
 
-                <th>
+                @* Check if the photo is a site rooted path or if its a url, if it is site rooted then it will display the place holder *@
+                <th> 
                     <img src="@(Url.Content(string.IsNullOrEmpty(item.Filename) ? "~/concert-photos/placeholder.jpg" : (item.Filename.StartsWith("/") || item.Filename.StartsWith("http", System.StringComparison.OrdinalIgnoreCase) ? item.Filename : "~/concert-photos/" + item.Filename)))" alt="@item.Title" class="thumbnail" />
                 </th>
                

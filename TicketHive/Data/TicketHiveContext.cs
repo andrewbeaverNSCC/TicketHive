@@ -17,5 +17,6 @@ namespace TicketHive.Data
         public DbSet<TicketHive.Models.Concert> Concert { get; set; } = default!;
         public DbSet<TicketHive.Models.Category> Category { get; set; } = default!;
         public DbSet<TicketHive.Models.Owner> Owner { get; set; } = default!;
+        public DbSet<TicketHive.Models.Purchase> Purchase { get; set; } = default!;
     }
 }

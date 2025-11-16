@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketHive.Data;
 
@@ -11,9 +12,11 @@ using TicketHive.Data;
 namespace TicketHive.Migrations
 {
     [DbContext(typeof(TicketHiveContext))]
-    partial class TicketHiveContextModelSnapshot : ModelSnapshot
+    [Migration("20251116004418_PurchaseModelAdded")]
+    partial class PurchaseModelAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
