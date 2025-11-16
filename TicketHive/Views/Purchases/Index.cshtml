@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Purchases Index</h1>
 
 @* <p>
     <a asp-action="Create">Create New</a>
@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.NameOnCard)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CardNumber)
+                @Html.DisplayNameFor(model => model.MaskedCardNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ExpirationDate)
@@ -55,7 +55,7 @@
                 @Html.DisplayFor(modelItem => item.NameOnCard)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CardNumber)
+                    @item.MaskedCardNumber
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ExpirationDate)

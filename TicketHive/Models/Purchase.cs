@@ -30,5 +30,21 @@ namespace TicketHive.Models
 
         // Navigation to the principal entity
         public Concert? Concert { get; set; }
+
+        // Safe display for views: show only last 4 digits
+        [Display(Name = "Card Number (hidden)")]
+        public string MaskedCardNumber
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(CardNumber))
+                {
+                    return string.Empty;
+                }
+                var digits = CardNumber.Trim();
+                if (digits.Length <= 4) return digits;
+                return new string('*', digits.Length - 4) + digits[^4..];
+            }
+        }
     }
 }
