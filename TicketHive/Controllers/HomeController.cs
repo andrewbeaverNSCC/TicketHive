@@ -44,7 +44,9 @@ namespace TicketHive.Controllers
             }
 
             // Get record where PK = id
-            var concert = await _context.Concert.FirstOrDefaultAsync(m => m.ConcertId == id);
+            var concert = await _context.Concert
+                .Include(c => c.Purchases)
+                .FirstOrDefaultAsync(m => m.ConcertId == id);
 
             // Record not found in the database
             if (concert == null)
