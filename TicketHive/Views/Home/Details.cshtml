@@ -65,3 +65,44 @@
     <a asp-controller="Concerts" asp-action="Edit" asp-route-id="@Model?.ConcertId">Edit</a> |
     <a asp-controller="Home" asp-action="Index">Back to List</a>
 </div>
+
+<section>
+    <h2>Purchases</h2>
+
+    @if (Model.Purchases != null && Model.Purchases.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Purchase Id</th>
+                    <th>Tickets</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Card (masked)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var purchase in Model.Purchases)
+                {
+                    <tr>
+                        <td>@purchase.PurchaseId</td>
+                        <td>@purchase.NumOfTickets</td>
+                        <td>@purchase.Name</td>
+                        <td>@purchase.Email</td>
+                        <td>@purchase.MaskedCardNumber</td>
+                        <td>
+                            <a asp-controller="Purchases" asp-action="Details" asp-route-id="@purchase.PurchaseId">Details</a> |
+                            <a asp-controller="Purchases" asp-action="Edit" asp-route-id="@purchase.PurchaseId">Edit</a> |
+                            <a asp-controller="Purchases" asp-action="Delete" asp-route-id="@purchase.PurchaseId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No purchases for this concert.</p>
+    }
+</section>
